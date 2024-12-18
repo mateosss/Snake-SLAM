@@ -6,6 +6,7 @@ project(${LIB_NAME} VERSION 1.0.0 LANGUAGES C CXX)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 include(helper_macros)
 include(ExternalProject)
 DefaultBuildType(RelWithDebInfo)

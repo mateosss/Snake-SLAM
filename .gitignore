@@ -9,3 +9,4 @@ meshes/
 scenes/
 .cache
 euroc_stereo_25_runs_each
+eval*
