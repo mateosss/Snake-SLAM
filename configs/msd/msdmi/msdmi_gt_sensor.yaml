@@ -1,0 +1,13 @@
+# General sensor definitions.
+sensor_type: External Motion Capture
+comment: SteamVR 2.0 tracking from 3 Lighthouse base stations
+
+# Sensor extrinsics wrt. the body-frame. This is the transformation of the
+# tracking prima to the body frame.
+T_BS:
+  cols: 4
+  rows: 4
+  data: [1.0, 0.0, 0.0, 0.0,
+         0.0, 1.0, 0.0, 0.0,
+         0.0, 0.0, 1.0, 0.0,
+         0.0, 0.0, 0.0, 1.0]
