@@ -17,6 +17,7 @@ void Snake::PerformanceStats::PrintStatistics()
         auto error_sim3 = map.TrajectoryError(true);
         //        auto error_sim3_2 = map.TrajectoryError2(true);
         auto error_se3 = map.TrajectoryError(false);
+        auto error_se3_all = map.TrajectoryError(false, true);
         auto rep_stats = map.ReprojectionStats();
 
         std::cout << ConsoleColor::RED;
@@ -68,7 +69,9 @@ void Snake::PerformanceStats::PrintStatistics()
 
 
             table << "|"
-                  << "Abs. Trans. RMSE SE3 (m)" << error_se3.ate_rmse << "|";
+                  << "Abs. Trans. RMSE SE3 (m)" << error_se3_all.ate_rmse << "|";
+            table << "|"
+                  << "KF Abs. Trans. RMSE SE3 (m)" << error_se3.ate_rmse << "|";
         }
 
         std::cout << "================================================" << std::endl;

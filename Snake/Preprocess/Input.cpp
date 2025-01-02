@@ -174,8 +174,7 @@ void Input::CreateCamera()
         {
             SAIGA_ASSERT(settings.inputType == InputType::Mono || settings.inputType == InputType::Stereo);
             auto c = std::make_unique<Saiga::EuRoCDataset>(settings.datasetParameters);
-            c->saveGroundTruthTrajectory(settings.evalDir + settings.out_file_prefix + "_gt.tum");
-            c->saveGroundTruthTrajectory(settings.evalDir + "/frames/" + settings.out_file_prefix + "_gt.tum");
+            c->saveGroundTruthTrajectory(settings.evalDir + settings.out_file_prefix + ".gt.csv");
 
             if (settings.inputType == InputType::Stereo)
                 stereo_intrinsics = c->intrinsics;

@@ -180,7 +180,7 @@ class Map
         double scale_error = 1;
     };
 
-    TrajError TrajectoryError(bool solve_scale);
+    TrajError TrajectoryError(bool solve_scale, bool all_frames = false);
 
 
     // Check if keyframe observations are consistent to mappoint observations.

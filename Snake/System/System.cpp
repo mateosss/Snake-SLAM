@@ -215,11 +215,15 @@ void System::run()
     }
 
 
-    writeFrameTrajectory(settings.evalDir + "/frames/" + settings.out_file_prefix + "_frames_ba.tum");
-    writeKeyFrameTrajectory(settings.evalDir + settings.out_file_prefix + "_keyframes_ba.tum");
+    writeFrameTrajectory(settings.evalDir + settings.out_file_prefix + ".causal.csv");
+    writeKeyFrameTrajectory(settings.evalDir + settings.out_file_prefix + ".kfs.csv");
 
     performance_stats.PrintStatistics();
     performance_stats.PrintTimings();
+
+    // After PrintStatistics, GetAllFrames() get called and corrects all
+    // relative frame poses with the latest optimized keyframe.
+    writeFrameTrajectory(settings.evalDir + settings.out_file_prefix + ".ba.csv");
 
     if (settings.inputType == InputType::RGBD)
     {
@@ -545,22 +549,23 @@ void System::writeFrameTrajectory(const std::string& file, bool write_id)
 
     std::ofstream strm(file);
     strm.precision(15);
+    strm << "#ts,px,py,pz,qw,qx,qy,qz" << std::endl;
     for (auto f : snake_frames)
     {
         if (f->validPose)
         {
-            double time = f->timeStamp;
-            SE3 pose    = f->tmpPose.inverse();
-            Vec3 t      = pose.translation();
-            Quat q      = pose.unit_quaternion();
+            uint64_t time = f->timeStamp * 1e9;
+            SE3 pose      = f->Pose().inverse() * mono_intrinsics.camera_to_gt;
+            Vec3 t        = pose.translation();
+            Quat q        = pose.unit_quaternion();
 
             if (write_id)
             {
-                strm << f->id << " ";
+                strm << f->id << ",";
             }
 
-            strm << time << " " << t(0) << " " << t(1) << " " << t(2) << " " << q.x() << " " << q.y() << " " << q.z()
-                 << " " << q.w() << std::endl;
+            strm << time << "," << t(0) << "," << t(1) << "," << t(2) << "," << q.w() << "," << q.x() << "," << q.y()
+                 << "," << q.z() << std::endl;
         }
     }
 }
@@ -574,18 +579,18 @@ void System::writeKeyFrameTrajectory(const std::string& file)
 
     std::ofstream strm(file);
     strm.precision(15);
-
+    strm << "#ts,px,py,pz,qw,qx,qy,qz" << std::endl;
     for (auto i : keyframesi)
     {
         auto& kf = map.getKeyframe(i);
         if (kf.isBad()) continue;
 
-        double time = kf.frame->timeStamp;
-        SE3 pose    = kf.PoseInv();
-        Vec3 t      = pose.translation();
-        Quat q      = pose.unit_quaternion();
-        strm << time << " " << t(0) << " " << t(1) << " " << t(2) << " " << q.x() << " " << q.y() << " " << q.z() << " "
-             << q.w() << std::endl;
+        uint64_t time = kf.frame->timeStamp * 1e9;
+        SE3 pose      = kf.PoseInv() * mono_intrinsics.camera_to_gt;
+        Vec3 t        = pose.translation();
+        Quat q        = pose.unit_quaternion();
+        strm << time << "," << t(0) << "," << t(1) << "," << t(2) << "," << q.w() << "," << q.x() << "," << q.y() << ","
+             << q.z() << std::endl;
     }
 }
 

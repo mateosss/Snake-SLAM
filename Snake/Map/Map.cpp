@@ -429,7 +429,7 @@ Map::ReprojectionError Map::ReprojectionStats()
     return result;
 }
 
-Map::TrajError Map::TrajectoryError(bool solve_scale)
+Map::TrajError Map::TrajectoryError(bool solve_scale, bool all_frames)
 {
     auto lock = LockReadOnly();
 
@@ -442,24 +442,34 @@ Map::TrajError Map::TrajectoryError(bool solve_scale)
     }
 
     Trajectory::Scene scene;
-    std::vector<int> keyframes, points;
-    GetAllKeyFrames(keyframes);
-    GetAllMapPoints(points);
 
-
-    for (auto i : keyframes)
+    if (all_frames)
     {
-        auto& kf = allKeyframes[i];
-        if (kf.isBad()) continue;
-
-        if (!kf.frame->groundTruth.has_value()) continue;
-
-
-        Trajectory::Observation obs;
-
-        obs.estimate     = kf.Pose().inverse();
-        obs.ground_truth = kf.frame->groundTruth.value();
-        scene.vertices.push_back(obs);
+        auto frames = GetAllFrames();
+        for (auto frame : frames)
+        {
+            if (!frame->validPose) continue;
+            if (!frame->groundTruth.has_value()) continue;
+            Trajectory::Observation obs;
+            obs.estimate = frame->Pose().inverse();
+            obs.ground_truth = frame->groundTruth.value();
+            scene.vertices.push_back(obs);
+        }
+    }
+    else  // Keyframes only
+    {
+        std::vector<int> keyframes{};
+        GetAllKeyFrames(keyframes);
+        for (auto i : keyframes)
+        {
+            auto& kf = allKeyframes[i];
+            if (kf.isBad()) continue;
+            if (!kf.frame->groundTruth.has_value()) continue;
+            Trajectory::Observation obs;
+            obs.estimate     = kf.Pose().inverse();
+            obs.ground_truth = kf.frame->groundTruth.value();
+            scene.vertices.push_back(obs);
+        }
     }
 
     if (scene.vertices.empty())
@@ -470,7 +480,7 @@ Map::TrajError Map::TrajectoryError(bool solve_scale)
     scene.extrinsics     = mono_intrinsics.camera_to_gt;
     scene.optimize_scale = solve_scale;
 
-    scene.InitialAlignment();
+    scene.InitialAlignmentUmeyama();
 
 #ifdef SAIGA_USE_CERES
      scene.OptimizeCeres();
