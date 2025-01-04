@@ -480,7 +480,11 @@ Map::TrajError Map::TrajectoryError(bool solve_scale, bool all_frames)
     scene.extrinsics     = mono_intrinsics.camera_to_gt;
     scene.optimize_scale = solve_scale;
 
+#if 0
+    scene.InitialAlignment();
+#else
     scene.InitialAlignmentUmeyama();
+#endif
 
 #ifdef SAIGA_USE_CERES
      scene.OptimizeCeres();

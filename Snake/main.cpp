@@ -67,11 +67,11 @@ int main(int argc, char** argv)
 
     if (!std::filesystem::exists(settings.evalDir))
     {
-        std::filesystem::create_directory(settings.evalDir);
+        std::filesystem::create_directories(settings.evalDir);
     }
     if (!std::filesystem::exists(settings.evalDir + "/frames/"))
     {
-        std::filesystem::create_directory(settings.evalDir + "/frames/");
+        std::filesystem::create_directories(settings.evalDir + "/frames/");
     }
 
     Saiga::SaigaParameters sparams;

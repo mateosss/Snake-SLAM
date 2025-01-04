@@ -181,7 +181,7 @@ void Input::CreateCamera()
             else
                 mono_intrinsics = c->intrinsics;
             SAIGA_ASSERT(c->getIMU().has_value());
-            has_imu       = true;
+            has_imu       = settings.enable_imu;
             imu           = c->getIMU().value();
             is_dataset    = true;
             camera_stereo = std::move(c);
