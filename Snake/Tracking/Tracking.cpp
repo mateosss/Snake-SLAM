@@ -41,6 +41,19 @@ void Tracking::run()
     thread = Thread([this]() {
         Saiga::Random::setSeed(settings.randomSeed);
         Saiga::setThreadName("Tracking");
+        auto rtcsv = std::ofstream{settings.evalDir + settings.out_file_prefix + ".rt.csv"};
+        rtcsv << "#t_ns,tx,ty,tz,qw,qx,qy,qz" << std::endl;
+        
+        auto validrtcsv = std::ofstream{settings.evalDir + settings.out_file_prefix + ".rt.valid.csv"};
+        validrtcsv << "#t_ns,tx,ty,tz,qw,qx,qy,qz" << std::endl;
+        
+        printf(">>> Create in.csv\n");
+        auto incsv = std::ofstream{"in.csv"};
+        incsv << "#t_ns,in_ts" << std::endl;
+        
+        printf(">>> Create out.csv\n");
+        auto outcsv = std::ofstream{"out.csv"};
+        outcsv << "#t_ns,out_ts" << std::endl;
 
         while (true)
         {
@@ -69,6 +82,9 @@ void Tracking::run()
                 trackTimer.start();
             }
 
+            int64_t t_ns = frame->timeStamp * 1e9;
+            int64_t in_ns = std::chrono::steady_clock::now().time_since_epoch().count();
+            incsv << t_ns << "," << in_ns << std::endl;
             predictor.Predict(frame);
 
 
@@ -89,6 +105,18 @@ void Tracking::run()
                     localMapping->Process(new_kf);
                     reference_keyframe = new_kf;
                 }
+            }
+            
+            int64_t out_ns = std::chrono::steady_clock::now().time_since_epoch().count();
+            outcsv << t_ns << "," << out_ns << std::endl;
+            
+            int64_t ts_ns = frame->timeStamp * 1e9; // Maybe the same as t_ns, didnt check what happens to `frame`
+            SE3 pose      = frame->Pose().inverse() * mono_intrinsics.camera_to_gt;
+            Eigen::Vector3d t = pose.translation();
+            Eigen::Quaterniond q(pose.unit_quaternion());
+            rtcsv << ts_ns << "," << t.x() << "," << t.y() << "," << t.z() << "," << q.w() << "," << q.x() << "," << q.y() << "," << q.z() << std::endl;
+            if (frame->validPose) {
+                validrtcsv << ts_ns << "," << t.x() << "," << t.y() << "," << t.z() << "," << q.w() << "," << q.x() << "," << q.y() << "," << q.z() << std::endl;
             }
 
 
@@ -136,6 +164,11 @@ void Tracking::run()
             }
         }
         trackTimer.stop();
+        
+        printf(">>> Close in.csv\n");
+        incsv.close();
+        printf(">>> Close out.csv\n");
+        outcsv.close();
     });
 }
 
