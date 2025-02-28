@@ -20,9 +20,12 @@ namespace Snake
 {
 MonoInitializer::MonoInitializer(int quality) : Initializer(quality)
 {
-    quality = std::min(2, std::max(quality, 0));
+    quality = std::min(2, std::max(quality, -1));
     switch (quality)
     {
+        case -1:
+            params.MakeLowerQuality();
+            break;
         case 0:
             params.MakeLowQuality();
             break;

@@ -135,7 +135,7 @@ struct Settings
 
     // Initilization quality for monocular input.
     // Higher numbers means higher quality (and more required feature matches)
-    // Range [0,2]
+    // Range [-1,2]
     int initialization_quality = 1;
 
 

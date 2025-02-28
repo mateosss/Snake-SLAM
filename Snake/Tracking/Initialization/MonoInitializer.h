@@ -59,6 +59,17 @@ struct MonoInitializerParameters
     static constexpr int five_point_ransac_iterations = 300;
 #endif
 
+    void MakeLowerQuality()
+    {
+        constexpr float scale = 2.0;
+        min_matches             = 175 / scale;
+        five_point_threshold_px = 2.0 * scale;
+        min_inliers             = 140 / scale;
+        min_angle               = 1.1 / scale;
+        max_homography_ratio    = 0.7 * scale;
+        min_histogram_density   = 0.3 / scale;
+    }
+
     void MakeLowQuality()
     {
         min_matches             = 175;
