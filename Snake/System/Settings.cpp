@@ -137,6 +137,8 @@ Settings::Settings(const std::string& file)
         INI_GETADD(ini, group, kfi_target_matches);
         INI_GETADD(ini, group, th_map);
         INI_GETADD(ini, group, initialization_quality);
+        INI_GETADD(ini, group, reprojection_error_threshold_mono);
+        INI_GETADD(ini, group, reprojection_error_threshold_stereo);
     }
 
 

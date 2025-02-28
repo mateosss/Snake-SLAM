@@ -69,8 +69,8 @@ void LocalMapping::Process(Keyframe* kf)
 
         MapSearchParams params;
 
-        params.fuse_threshold =
-            settings.inputType == InputType::Mono ? reprojectionErrorThresholdMono : reprojectionErrorThresholdStereo;
+        params.fuse_threshold = settings.inputType == InputType::Mono ? settings.reprojection_error_threshold_mono
+                                                                      : settings.reprojection_error_threshold_stereo;
         params.fuse_threshold *= 1.2;
 
         params.feature_error        = 50;
@@ -317,8 +317,8 @@ void LocalMapping::MapPointCulling(KeyFrame* kf)
 void LocalMapping::CreateNewMapPoints(KeyFrame* kf)
 {
     TriangulationParams params;
-    params.errorMono           = reprojectionErrorThresholdMono;
-    params.errorStereo         = reprojectionErrorThresholdStereo;
+    params.errorMono           = settings.reprojection_error_threshold_mono;
+    params.errorStereo         = settings.reprojection_error_threshold_mono;
     params.epipolarDistance    = 4;
     params.feature_distance    = 50;
     params.only_past_keyframes = false;

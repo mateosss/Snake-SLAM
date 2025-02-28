@@ -138,6 +138,8 @@ struct Settings
     // Range [-1,2]
     int initialization_quality = 1;
 
+    float reprojection_error_threshold_mono   = 2.1;
+    float reprojection_error_threshold_stereo = 2.3;
 
 
     // ======== IMU Settings =========
@@ -166,6 +168,9 @@ struct Settings
     void SetDefaultParametersForDataset();
 
     void Print();
+
+    float getReprojErrThMono2() { return reprojection_error_threshold_mono * reprojection_error_threshold_mono; }
+    float getReprojErrThStereo2() { return reprojection_error_threshold_stereo * reprojection_error_threshold_stereo; }
 };
 
 inline Settings settings;

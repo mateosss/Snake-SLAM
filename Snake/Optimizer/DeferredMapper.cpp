@@ -39,7 +39,7 @@ void DeferredMapper::Process(Keyframe* kf)
 std::pair<int, int> DeferredMapper::Relink(KeyFrame* kf)
 {
     static constexpr auto relink_reprojection_error_threshold = 0.8;
-    static constexpr auto relink_outlier_threshold            = reprojectionErrorThresholdMono;
+    static auto relink_outlier_threshold                      = settings.reprojection_error_threshold_mono;
     static constexpr auto relink_feature_threshold            = 25;
 
     // full lock. we modify inside the loop
@@ -167,8 +167,8 @@ std::pair<int, int> DeferredMapper::Relink(KeyFrame* kf)
 int DeferredMapper::MapSearch(Keyframe* kf)
 {
     MapSearchParams params;
-    params.fuse_threshold =
-        settings.inputType == InputType::Mono ? reprojectionErrorThresholdMono : reprojectionErrorThresholdStereo;
+    params.fuse_threshold = settings.inputType == InputType::Mono ? settings.reprojection_error_threshold_mono
+                                                                  : settings.reprojection_error_threshold_stereo;
     params.fuse_threshold *= 1;
     params.two_match_factor     = 1.5;
     params.feature_error        = 50;
@@ -183,8 +183,8 @@ std::tuple<int, int, int> DeferredMapper::Retriangulate(Keyframe* kf)
     // Triangulate new points
     TriangulationParams params;
     float factor               = 0.8;
-    params.errorMono           = reprojectionErrorThresholdMono * factor;
-    params.errorStereo         = reprojectionErrorThresholdStereo * factor;
+    params.errorMono           = settings.reprojection_error_threshold_mono * factor;
+    params.errorStereo         = settings.reprojection_error_threshold_stereo * factor;
     params.epipolarDistance    = 1.2;
     params.feature_distance    = 40;
     params.only_past_keyframes = true;

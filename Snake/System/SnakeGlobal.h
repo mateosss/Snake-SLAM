@@ -131,29 +131,17 @@ constexpr int maxPoints             = 10000000;
 
 
 #ifdef SNAKE_OS_MODE
-constexpr float reprojectionErrorThresholdMono   = 2.44765;    // sqrt(5.991)
-constexpr float reprojectionErrorThresholdStereo = 2.7955321;  // sqrt(7.815)
 constexpr float trackingErrorFactorCoarse        = 1;
 constexpr float trackingErrorFactorFine          = 1;
 constexpr float lbaErrorFactor                   = 1.0;
 inline double th_depth                           = 3;
 #else
 
-// constexpr float reprojectionErrorThresholdMono   = 2.44765;
-// constexpr float reprojectionErrorThresholdStereo = 2.7955321;
-
-constexpr float reprojectionErrorThresholdMono   = 2.1;
-constexpr float reprojectionErrorThresholdStereo = 2.3;
-
 constexpr float trackingErrorFactorCoarse = 1;
 constexpr float trackingErrorFactorFine   = 1;
 constexpr float lbaErrorFactor            = 1;
 inline double th_depth                    = 20;
 #endif
-
-constexpr float reprojectionErrorThresholdMono2   = reprojectionErrorThresholdMono * reprojectionErrorThresholdMono;
-constexpr float reprojectionErrorThresholdStereo2 = reprojectionErrorThresholdStereo * reprojectionErrorThresholdStereo;
-
 
 inline std::atomic_bool pause       = false;
 inline std::atomic_bool stop_camera = false;

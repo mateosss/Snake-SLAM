@@ -38,8 +38,8 @@ GlobalBundleAdjustment::GlobalBundleAdjustment() : Module(ModuleType::OTHER)
 
     global_op_options_points = global_op_options;
 
-    global_ba_options.huberMono      = reprojectionErrorThresholdMono;
-    global_ba_options.huberStereo    = reprojectionErrorThresholdStereo;
+    global_ba_options.huberMono      = settings.reprojection_error_threshold_mono;
+    global_ba_options.huberStereo    = settings.reprojection_error_threshold_stereo;
     global_ba_options.helper_threads = 1;
 }
 
@@ -324,7 +324,7 @@ void GlobalBundleAdjustment::RealignIntermiediateFrames(bool ceres, bool with_im
         f->tmpPose   = SE3quat;
         f->UpdateRelFromTmpPose();
 
-        f->removeOutliers(reprojectionErrorThresholdMono, reprojectionErrorThresholdStereo);
+        f->removeOutliers(settings.reprojection_error_threshold_mono, settings.reprojection_error_threshold_stereo);
     }
 }
 
@@ -505,8 +505,7 @@ void GlobalBundleAdjustment::UpdateGlobalScene(bool remove_outliers)
 
     if (remove_outliers)
     {
-        auto c = map.removeOutliers(reprojectionErrorThresholdMono * reprojectionErrorThresholdMono,
-                                    reprojectionErrorThresholdStereo * reprojectionErrorThresholdStereo);
+        auto c           = map.removeOutliers(settings.getReprojErrThMono2(), settings.getReprojErrThStereo2());
         std::cout << "Removed Observations: " << c << std::endl;
     }
     map.mapState++;

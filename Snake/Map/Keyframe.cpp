@@ -357,7 +357,7 @@ bool KeyFrame::ReplaceMapPointMatch(int idx, MapPoint* mp)
     // Only replace if error low. Otherwise remove observation.
     auto ip3     = K.project3(pose * wp);
     double error = (frame->undistorted_keypoints[idx].point - ip3.head<2>()).squaredNorm();
-    auto th      = reprojectionErrorThresholdMono * 2.0;
+    auto th      = settings.reprojection_error_threshold_mono * 2.0;
     if (ip3.z() > 0 && error < th * th)
     {
         observations[idx] = mp;

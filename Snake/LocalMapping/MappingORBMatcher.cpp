@@ -328,12 +328,12 @@ int MappingORBMatcher::Fuse(Keyframe* kf, const vector<MapPoint*>& points,
                 Vec3 ips2(kp.point.x(), kp.point.y(), kf->frame->right_points[idx]);
                 //                SAIGA_EXIT_ERROR("not implemented");
                 auto e2 = (ips - ips2).squaredNorm();
-                if (e2 * scalePyramid.InverseScale(kp.octave) > reprojectionErrorThresholdStereo2) continue;
+                if (e2 * scalePyramid.InverseScale(kp.octave) > settings.getReprojErrThStereo2()) continue;
             }
             else
             {
                 auto e2 = (ip - kp.point).squaredNorm();
-                if (e2 * scalePyramid.InverseScale(kp.octave) > reprojectionErrorThresholdMono2) continue;
+                if (e2 * scalePyramid.InverseScale(kp.octave) > settings.getReprojErrThMono2()) continue;
             }
 
             auto& dKF = kf->frame->descriptors[idx];

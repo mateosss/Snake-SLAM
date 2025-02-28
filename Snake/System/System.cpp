@@ -201,7 +201,7 @@ void System::run()
 
     {
         auto lock = map.LockFull();
-        map.removeOutliers(0.75 * reprojectionErrorThresholdMono2, 0.75 * reprojectionErrorThresholdStereo2);
+        map.removeOutliers(0.75 * settings.getReprojErrThMono2(), 0.75 * settings.getReprojErrThStereo2());
     }
     gba->FullBA(10);
 

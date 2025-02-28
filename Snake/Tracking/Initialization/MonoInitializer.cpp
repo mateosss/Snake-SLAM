@@ -156,21 +156,21 @@ MonoInitInfo MonoInitializer::ComputeRelativeTransformation(FramePtr frame1, Fra
 
     {
 #ifdef USE_FIVE_POINT
-        auto th = reprojectionErrorThresholdMono / K.fx;
+        auto th = settings.reprojection_error_threshold_mono / K.fx;
 #else
-        auto th = reprojectionErrorThresholdMono;
+        auto th = settings.reprojection_error_threshold_mono;
 #endif
 
         // tvr.scene.removeOutliers(
         //        double initial_rms = tvr.scene.rms();
-        //        if (initial_rms > reprojectionErrorThresholdMono)
+        //        if (initial_rms > settings.reprojection_error_threshold_mono)
         //        {
         //            std::cout << "Skipping init rms = " << initial_rms << std::endl;
         //            info.state = MonoInitInfo::State::NOT_ENOUGH_INLIERS;
         //            return info;
         //        }
 
-        //        tvr.scene.removeOutliers(reprojectionErrorThresholdMono * 1.5);
+        //        tvr.scene.removeOutliers(settings.reprojection_error_threshold_mono * 1.5);
 
 #if WITH_IMU
         if (settings.initial_bias_gyro.squaredNorm() > 0)

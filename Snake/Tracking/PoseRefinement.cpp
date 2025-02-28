@@ -11,8 +11,10 @@
 namespace Snake
 {
 PoseRefinement::PoseRefinement(double errorFactor)
-    : rpo(reprojectionErrorThresholdMono * errorFactor, reprojectionErrorThresholdStereo * errorFactor),
-      rpo_smooth(reprojectionErrorThresholdMono * errorFactor, reprojectionErrorThresholdStereo * errorFactor)
+    : rpo(settings.reprojection_error_threshold_mono * errorFactor,
+          settings.reprojection_error_threshold_stereo * errorFactor),
+      rpo_smooth(settings.reprojection_error_threshold_mono * errorFactor,
+                 settings.reprojection_error_threshold_stereo * errorFactor)
 {
     int maxPointsPerImage = 5000;
     idx.reserve(maxPointsPerImage);

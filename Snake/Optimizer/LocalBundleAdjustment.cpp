@@ -39,8 +39,8 @@ LocalBundleAdjustment::LocalBundleAdjustment()
 
     //    cba.reserve(maxKeyframes, maxPoints);
 
-    chi1Mono   = reprojectionErrorThresholdMono * lbaErrorFactor;
-    chi1Stereo = reprojectionErrorThresholdStereo * lbaErrorFactor;
+    chi1Mono   = settings.reprojection_error_threshold_mono * lbaErrorFactor;
+    chi1Stereo = settings.reprojection_error_threshold_stereo * lbaErrorFactor;
 
     chi2Mono                                = chi1Mono * chi1Mono;
     chi2Stereo                              = chi1Stereo * chi1Stereo;

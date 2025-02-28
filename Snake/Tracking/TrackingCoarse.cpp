@@ -409,7 +409,7 @@ bool Tracking::TrackBruteForce(Frame& frame, Keyframe* ref, int min_matches, boo
     {
         RansacParameters params;
         params.maxIterations     = 250;
-        auto chi1                = 2 * reprojectionErrorThresholdMono / K.fx;
+        auto chi1                = 2 * settings.reprojection_error_threshold_mono / K.fx;
         params.residualThreshold = chi1 * chi1;
         params.threads           = settings.num_tracking_threads;
 
